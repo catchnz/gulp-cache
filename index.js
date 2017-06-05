@@ -10,7 +10,10 @@ var TaskProxy = require('./lib/TaskProxy');
 var Transform = require('readable-stream/transform');
 
 var VERSION = require('./package.json').version;
-var fileCache = new Cache({cacheDirName: 'gulp-cache'});
+var fileCache = new Cache({
+    cacheDirName: 'gulp-cache',
+    tmpDir: hmeDir
+});
 
 function defaultKey(file) {
   return [VERSION, file.contents.toString('base64')].join('');
@@ -73,6 +76,18 @@ var cacheTask = function(task, opts) {
         cb(new PluginError('gulp-cache', 'Cannot operate on stream sources'));
         return;
       }
+
+    // Re assign the path to a relative path
+    // Assumptions:
+    // 1. Front end code is inside a public dir
+    // 2. Node modules are at the root of the project
+    var path = file.path,
+        segment = path.split('public')[1],
+        cleanSegment = segment.substring(1),
+        relPath = 'public/' + cleanSegment;
+
+    console.log('rel path: ', relPath);
+    file.path = relPath;
 
       new TaskProxy({
         task: task,
