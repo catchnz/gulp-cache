@@ -81,15 +81,12 @@ var cacheTask = function(task, opts) {
         return;
       }
 
-    // Re assign the path to a relative path
-    // Assumptions:
-    // 1. Front end code is inside a public dir
-    var path = file.path,
-        segment = path.split('public')[1],
-        cleanSegment = segment.substring(1),
-        relPath = 'public/' + cleanSegment;
+      // Make the file path a relative path
+      var path = file.path,
+          dir = process.cwd(),
+          relPath = path.replace(dir + '/', '');
 
-    file.path = relPath;
+      file.path = relPath;
 
       new TaskProxy({
         task: task,
