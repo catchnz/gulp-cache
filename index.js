@@ -13,11 +13,8 @@ var osHomeDir = require('os-homedir');
 var hmeDir = osHomeDir();
 
 var VERSION = require('./package.json').version;
-// Put the gulp-cache in user home /gulp-cache
-var fileCache = new Cache({
-    cacheDirName: 'gulp-cache',
-    tmpDir: hmeDir
-});
+
+var fileCache = new Cache({cacheDirName: 'gulp-cache'});
 
 function defaultKey(file) {
   return [VERSION, file.contents.toString('base64')].join('');
@@ -53,6 +50,26 @@ var defaultOptions = {
   }
 };
 
+/**
+* MODIFIED DEFAULTS
+*/
+// Put the gulp-cache in user home /gulp-cache
+defaultOptions.fileCache = new Cache({
+    cacheDirName: 'gulp-cache',
+    tmpDir: hmeDir
+});
+defaultOptions.value: function(file) {
+    return {
+        cache: file.contents.toString('binary')
+    }
+};
+defaultOptions.restore: function(restored) {
+    return Buffer.from(restored.cache, 'binary');
+};
+/**
+* MODIFIED DEFAULTS EOF
+*/
+
 var cacheTask = function(task, opts) {
   // Check for required task option
   if (!task) {
@@ -80,13 +97,6 @@ var cacheTask = function(task, opts) {
         cb(new PluginError('gulp-cache', 'Cannot operate on stream sources'));
         return;
       }
-
-      // Make the file path a relative path
-      var path = file.path,
-          dir = process.cwd(),
-          relPath = path.replace(dir + '/', '');
-
-      file.path = relPath;
 
       new TaskProxy({
         task: task,
