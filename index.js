@@ -58,12 +58,12 @@ defaultOptions.fileCache = new Cache({
     cacheDirName: 'gulp-cache',
     tmpDir: hmeDir
 });
-defaultOptions.value: function(file) {
+defaultOptions.value = function(file) {
     return {
         cache: file.contents.toString('binary')
     }
 };
-defaultOptions.restore: function(restored) {
+defaultOptions.restore = function(restored) {
     return Buffer.from(restored.cache, 'binary');
 };
 /**
