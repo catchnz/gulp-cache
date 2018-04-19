@@ -2,7 +2,7 @@
   "name": "gulp-cache",
   "version": "0.5.2",
   "description": "A cache proxy plugin for Gulp",
-  "repository": "jgable/gulp-cache",
+  "repository": "catchnz/gulp-cache",
   "author": "Jacob Gable <jacob.gable@gmail.com> (http://jacobgable.com)",
   "contributors": [
     "Tyler Akins <fidian@rumkin.com>  (https://github.com/fidian)",
